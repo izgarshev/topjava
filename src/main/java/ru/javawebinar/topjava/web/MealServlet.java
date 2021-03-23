@@ -19,9 +19,16 @@ public class MealServlet extends HttpServlet {
         log.debug("redirect to meals");
         String action = request.getParameter("action");
         log.info(action);
-        request.setAttribute("mealList", UserMealsUtil.mealList);
-//        log.warn((String) request.getAttribute("mealList"));
-//        request.getRequestDispatcher("/meals.jsp").forward(request, response);
-        response.sendRedirect("meals.jsp");
+        if (action == null || action.equals("all")) {
+            request.setAttribute("mealList", UserMealsUtil.getAll());
+            request.getRequestDispatcher("meals.jsp").forward(request, response);
+        } else if (action.equals("delete")) {
+            String mealId = request.getParameter("id");
+            log.info("meal id: " + mealId);
+            UserMealsUtil.delete(Long.parseLong(mealId));
+            request.setAttribute("mealList", UserMealsUtil.getAll());
+            request.getRequestDispatcher("meals.jsp").forward(request, response);
+        }
     }
+
 }

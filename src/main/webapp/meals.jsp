@@ -4,12 +4,24 @@
 <html lang="ru">
 <head>
     <title>Meals</title>
+    <style>
+        .normal {
+            color: green;
+        }
+
+        .excess {
+            color: red;
+        }
+    </style>
 </head>
 <body>
 <h3><a href="index.html">Home</a></h3>
 <hr>
-<h2>Meals</h2>
+<h2>Список еды</h2>
+<hr>
+<a href="mealForm.jsp">Добавить еду</a>
 <table border="1px solid black">
+    <thead>
     <tr>
         <th>#</th>
         <th>Дата</th>
@@ -18,14 +30,15 @@
         <th>Обновить</th>
         <th>Удалить</th>
     </tr>
-    <jsp:useBean id="mealList" scope="request" type="java.util.List"/>
+    </thead>
     <c:forEach items="${mealList}" var="meal">
-        <jsp:useBean id="meal" class="ru.javawebinar.topjava.model.UserMeal"/>
-        <tr>
-            <td><c:out value="${meal.id}" /></td>
-            <td><fmt:formatDate pattern="yyyy-MMM-dd" value="${meal.dateTime}" /></td>
-            <td><c:out value="${meal.description}" /></td>
-            <td><c:out value="${meal.calories}" /></td>
+        <tr class="${meal.excess ? 'excess' : 'normal'}">
+            <td>${meal.id}</td>
+            <td>${meal.dateTime.toLocalDate()} ${meal.dateTime.toLocalTime()}</td>
+            <td>${meal.description}</td>
+            <td>${meal.calories}</td>
+            <td><a href="/topjava/meals?action=update&id=${meal.id}">Обновить</a></td>
+            <td><a href="/topjava/meals?action=delete&id=${meal.id}">Удалить</a></td>
         </tr>
     </c:forEach>
 </table>
