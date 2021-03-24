@@ -53,4 +53,9 @@ public class UserMealsUtil {
         System.out.println(sumByDate);
         return filteredList.stream().map(userMeal -> new UserMealWithExcess(userMeal.getId(), userMeal.getDateTime(), userMeal.getDescription(), userMeal.getCalories(), sumByDate.get(userMeal.getDateTime().toLocalDate()) > CALORIES_PER_DAY)).collect(Collectors.toList());
     }
+
+    public static void save(UserMeal meal) {
+        log.info("save method");
+        MEAL_LIST.add(meal);
+    }
 }

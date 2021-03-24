@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
+import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.util.UserMealsUtil;
 
 import javax.servlet.ServletException;
@@ -8,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -31,4 +33,15 @@ public class MealServlet extends HttpServlet {
         }
     }
 
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        log.debug("doPost");
+        String action = req.getParameter("action");
+        if (action.equals("create")) {
+            UserMeal meal = new UserMeal(null, LocalDateTime.parse(req.getParameter("dateTime")), req.getParameter("description"), Integer.parseInt(req.getParameter("calories")));
+            UserMealsUtil.save(meal);
+            req.setAttribute("mealList", UserMealsUtil.getAll());
+            req.getRequestDispatcher("meals.jsp").forward(req, resp);
+        }
+    }
 }
