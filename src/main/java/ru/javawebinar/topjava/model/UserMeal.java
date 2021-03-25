@@ -16,6 +16,7 @@ public class UserMeal extends AbstractClass{
         this.calories = calories;
     }
 
+
     public LocalDateTime getDateTime() {
         return dateTime;
     }

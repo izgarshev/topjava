@@ -19,7 +19,7 @@
 <hr>
 <h2>Список еды</h2>
 <hr>
-<a href="mealForm.jsp">Добавить еду</a>
+<a href="/topjava/meals?action=create">Добавить еду</a>
 <table border="1px solid black">
     <thead>
     <tr>
