@@ -32,6 +32,7 @@
     </tr>
     </thead>
     <c:forEach items="${mealList}" var="meal">
+        <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.UserMealWithExcess"/>
         <tr class="${meal.excess ? 'excess' : 'normal'}">
             <td>${meal.id}</td>
             <td>${meal.dateTime.toLocalDate()} ${meal.dateTime.toLocalTime()}</td>

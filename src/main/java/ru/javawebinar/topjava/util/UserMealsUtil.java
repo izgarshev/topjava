@@ -9,6 +9,7 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
@@ -51,12 +52,22 @@ public class UserMealsUtil implements MealRepo {
 
     @Override
     public void saveOrUpdate(UserMeal meal) {
-        log.info("save method");
+        log.info(meal.toString());
         if (meal.getId() == null) {
+            log.info("save method");
             meal.setId(counter.incrementAndGet());
             repository.put(meal.getId(), meal);
         } else {
-            repository.put(meal.getId(), meal);
+            log.info("update method");
+            repository.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
         }
+    }
+
+    @Override
+    public UserMeal getMealById(Long id) {
+        if (id == null) return null;
+        Optional<UserMeal> userMeal = repository.values().stream().findFirst().filter(userMealWithExcess -> userMealWithExcess.getId().equals(id));
+        log.info("get by id: " + userMeal.get().toString());
+        return userMeal.orElse(null);
     }
 }

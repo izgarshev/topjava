@@ -9,4 +9,5 @@ public interface MealRepo {
     List<UserMealWithExcess> getAll();
     void delete(Long userId);
     void saveOrUpdate(UserMeal meal);
+    UserMeal getMealById(Long id);
 }
