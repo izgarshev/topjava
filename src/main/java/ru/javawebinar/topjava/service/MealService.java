@@ -1,11 +1,15 @@
 package ru.javawebinar.topjava.service;
 
+import org.springframework.stereotype.Service;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Collection;
 
+@Service
 public class MealService {
 
     private final MealRepository repository;
@@ -36,5 +40,9 @@ public class MealService {
     // ORDERED dateTime desc
     public Collection<Meal> getAll() {
         return repository.getAll();
+    }
+
+    public Collection<Meal> getBetween(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+        return repository.getBetween(startDate, endDate, startTime, endTime);
     }
 }

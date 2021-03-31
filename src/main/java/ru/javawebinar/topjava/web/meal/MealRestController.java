@@ -3,8 +3,12 @@ package ru.javawebinar.topjava.web.meal;
 import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
+import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Collection;
 
 @Controller
@@ -36,6 +40,10 @@ public class MealRestController {
     // ORDERED dateTime desc
     public Collection<Meal> getAll() {
         return service.getAll();
+    }
+
+    public Collection<MealTo> getBetween(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+        return MealsUtil.getTos(service.getBetween(startDate, endDate, startTime, endTime), MealsUtil.DEFAULT_CALORIES_PER_DAY);
     }
 
 }
