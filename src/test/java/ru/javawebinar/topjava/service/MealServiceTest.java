@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
+import ru.javawebinar.topjava.model.Meal;
+
+import static ru.javawebinar.topjava.MealTestData.MEAL;
+import static ru.javawebinar.topjava.MealTestData.MEAL_ID;
+import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -21,7 +27,8 @@ public class MealServiceTest {
 
     @Test
     public void get() {
-
+        Meal meal = service.get(MEAL_ID, USER_ID);
+        Assert.assertEquals(meal, MEAL);
     }
 
     @Test
