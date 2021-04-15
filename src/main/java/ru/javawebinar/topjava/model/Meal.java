@@ -1,12 +1,19 @@
 package ru.javawebinar.topjava.model;
 
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+@NamedQueries(value = {
+        @NamedQuery(name = Meal.ALL, query = "select m from Meal m")
+})
+
+@Entity
+@Table(name = "meals", uniqueConstraints = {@UniqueConstraint(columnNames = {"id", "datetime"}, name = "meals_unique_id_datetime")})
 public class Meal extends AbstractBaseEntity {
+    public static final String ALL = "Meal.all";
+
     private LocalDateTime dateTime;
 
     private String description;
