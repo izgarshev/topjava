@@ -1,0 +1,12 @@
+.excess {
+    color: red;
+}
+
+.normal {
+    color: forestgreen;
+}
+
+th {
+    background-color: bisque;
+    border-color: aquamarine;
+}
