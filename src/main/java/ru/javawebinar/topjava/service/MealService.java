@@ -6,7 +6,9 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static ru.javawebinar.topjava.util.DateTimeUtil.atStartOfDayOrMin;
 import static ru.javawebinar.topjava.util.DateTimeUtil.atStartOfNextDayOrMax;
@@ -43,5 +45,13 @@ public class MealService {
 
     public Meal create(Meal meal, int userId) {
         return repository.save(meal, userId);
+    }
+
+    public static void main(String[] args) {
+        Map<String, Integer> map = new HashMap<>();
+//        map.put("банан", 123);
+        map.computeIfAbsent("банан", String::length);
+        map.put("fdg", 123);
+        System.out.println(map);
     }
 }
