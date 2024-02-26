@@ -1,8 +1,11 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.TestRule;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
+import org.junit.runners.model.Statement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
@@ -14,6 +17,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Date;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
@@ -28,6 +32,26 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 @Ignore
 public class MealServiceTest {
+    public static StringBuilder watchmanResult = new StringBuilder();
+    @Rule
+    public final TestRule watchman = new TestWatcher() {
+        final long start = new Date().getTime();
+
+        @Override
+        protected void finished(Description description) {
+            long end = new Date().getTime();
+            System.out.println("test " + description.getMethodName() + " finished for " + (end - start) + "ms");
+            watchmanResult.append(description.getMethodName()).append(" finished for ").append(end - start).append("ms").append("\n");
+        }
+    };
+
+    @AfterClass
+    public static void showWatchmanResult() {
+        System.out.println();
+        System.out.println("====================================");
+        System.out.println(watchmanResult);
+        System.out.println("====================================");
+    }
 
     @Autowired
     private MealService service;
@@ -101,8 +125,8 @@ public class MealServiceTest {
     @Test
     public void getBetweenInclusive() {
         MEAL_MATCHER.assertMatch(service.getBetweenInclusive(
-                        LocalDate.of(2020, Month.JANUARY, 30),
-                        LocalDate.of(2020, Month.JANUARY, 30), USER_ID),
+                LocalDate.of(2020, Month.JANUARY, 30),
+                LocalDate.of(2020, Month.JANUARY, 30), USER_ID),
                 meal3, meal2, meal1);
     }
 
