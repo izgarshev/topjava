@@ -1,0 +1,21 @@
+table {
+    border-collapse: separate;
+    border: 1px solid;
+}
+
+table tr {
+    height: 30px;
+}
+
+td {
+    border: 1px solid;
+    padding: 10px;
+}
+
+.exceed {
+    color: red;
+}
+
+.normal {
+    color: green;
+}
