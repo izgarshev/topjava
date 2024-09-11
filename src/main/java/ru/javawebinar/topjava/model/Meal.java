@@ -10,7 +10,7 @@ import java.time.LocalTime;
         @NamedQuery(name = Meal.ALL_SORTED, query = "select m from Meal m where m.user.id=:userId order by m.dateTime desc"),
         @NamedQuery(name = Meal.ONE, query = "select m from Meal m where m.id=:id and m.user.id=:userId"),
         @NamedQuery(name = Meal.DELETE, query = "delete from Meal m where m.id=:id and m.user.id=:userId"),
-        @NamedQuery(name = Meal.ALL_BETWEEN, query = "select m from Meal m where m.dateTime >=:start and m.dateTime <:end and m.user.id=:userId")
+        @NamedQuery(name = Meal.ALL_BETWEEN, query = "select m from Meal m where m.dateTime >=:start and m.dateTime <:end and m.user.id=:userId order by m.dateTime desc")
 })
 @Entity
 @Table(name = "meal")

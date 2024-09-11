@@ -1,7 +1,12 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.AfterClass;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestRule;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -9,11 +14,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Date;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
@@ -31,6 +38,23 @@ public class MealServiceTest {
 
     @Autowired
     private MealService service;
+
+    static StringBuilder testResult = new StringBuilder();
+
+    @Rule
+    public final TestRule watchman = new TestWatcher() {
+        final Date start = new Date();
+
+        @Override
+        protected void finished(Description description) {
+            testResult.append(description.getMethodName() + ": " + (new Date().getTime() - start.getTime()) + "ms\n");
+        }
+    };
+
+    @AfterClass
+    public static void showResult() {
+        System.out.println("test result: \n" + testResult);
+    }
 
     @Test
     public void delete() {
