@@ -36,6 +36,7 @@
         <!--    Tests  -->
         <junit.version>4.13.2</junit.version>
         <assertj.version>3.26.0</assertj.version>
+        <hamcrest.version>2.2</hamcrest.version>
     </properties>
 
     <build>
