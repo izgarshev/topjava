@@ -7,6 +7,7 @@ import ru.javawebinar.topjava.web.json.JsonUtil;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,20 +19,38 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class MatcherFactory {
     public static <T> Matcher<T> usingIgnoringFieldsComparator(Class<T> clazz, String... fieldsToIgnore) {
-        return new Matcher<>(clazz, fieldsToIgnore);
+//        return new Matcher<>(clazz, fieldsToIgnore);
+        return usingAssertions(clazz,
+                (t, t2) -> assertThat(t).usingRecursiveComparison().ignoringFields(fieldsToIgnore).isEqualTo(t2),
+                (ts, ts2) -> assertThat(ts).usingRecursiveFieldByFieldElementComparatorIgnoringFields(fieldsToIgnore).isEqualTo(ts2));
+    }
+
+    public static <T> Matcher<T> usingEqualsComparator(Class<T> clazz) {
+        return usingAssertions(clazz, (t, t2) -> assertThat(t).isEqualTo(t2), (ts, ts2) -> assertThat(ts).isEqualTo(ts2));
+    }
+
+    public static <T> Matcher<T> usingAssertions(Class<T> clazz, BiConsumer<T, T> assertion, BiConsumer<Iterable<T>, Iterable<T>> iterableAssertion) {
+        return new Matcher<>(clazz, assertion, iterableAssertion);
     }
 
     public static class Matcher<T> {
         private final Class<T> clazz;
-        private final String[] fieldsToIgnore;
+//        private final String[] fieldsToIgnore;
+        private final BiConsumer<T, T> assertion;
+        private final BiConsumer<Iterable<T>, Iterable<T>> iterableAssertion;
 
-        private Matcher(Class<T> clazz, String... fieldsToIgnore) {
+
+//        private Matcher(Class<T> clazz, String... fieldsToIgnore) {
+        private Matcher(Class<T> clazz, BiConsumer<T, T> assertion, BiConsumer<Iterable<T>, Iterable<T>> iterableAssertion) {
             this.clazz = clazz;
-            this.fieldsToIgnore = fieldsToIgnore;
+            this.assertion = assertion;
+            this.iterableAssertion = iterableAssertion;
+//            this.fieldsToIgnore = fieldsToIgnore;
         }
 
         public void assertMatch(T actual, T expected) {
-            assertThat(actual).usingRecursiveComparison().ignoringFields(fieldsToIgnore).isEqualTo(expected);
+//            assertThat(actual).usingRecursiveComparison().ignoringFields(fieldsToIgnore).isEqualTo(expected);
+            assertion.accept(actual, expected);
         }
 
         @SafeVarargs
@@ -40,7 +59,8 @@ public class MatcherFactory {
         }
 
         public void assertMatch(Iterable<T> actual, Iterable<T> expected) {
-            assertThat(actual).usingRecursiveFieldByFieldElementComparatorIgnoringFields(fieldsToIgnore).isEqualTo(expected);
+//            assertThat(actual).usingRecursiveFieldByFieldElementComparatorIgnoringFields(fieldsToIgnore).isEqualTo(expected);
+            iterableAssertion.accept(actual, expected);
         }
 
         public ResultMatcher contentJson(T expected) {
