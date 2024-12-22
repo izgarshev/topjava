@@ -1,8 +1,9 @@
-const userAjaxUrl = "admin/users/";
+const mealAjaxUrl = "rest/profile/meals/";
+let form = $('#mealDetailsForm');
 
 // https://stackoverflow.com/a/5064235/548473
 const ctx = {
-    ajaxUrl: userAjaxUrl
+    ajaxUrl: mealAjaxUrl
 };
 
 // $(document).ready(function () {
@@ -13,19 +14,13 @@ $(function () {
             "info": true,
             "columns": [
                 {
-                    "data": "name"
+                    "data": "dateTime"
                 },
                 {
-                    "data": "email"
+                    "data": "description"
                 },
                 {
-                    "data": "roles"
-                },
-                {
-                    "data": "enabled"
-                },
-                {
-                    "data": "registered"
+                    "data": "calories"
                 },
                 {
                     "defaultContent": "Edit",
@@ -47,25 +42,44 @@ $(function () {
 });
 
 function save() {
+    console.log('save in meals');
+    console.log('data: ' + form.serialize());
     $.ajax({
         type: "POST",
         url: ctx.ajaxUrl,
         data: form.serialize()
+    })
+        .done(function () {
+            $("#mealFormModal").modal("hide");
+            updateTable();
+            successNoty("Meal Saved");
+        })
+}
+
+function cleanFilter() {
+    console.log('clean filter');
+    // $("#mealFilter").trigger("reset");
+    console.log("filter element: ", document.getElementById("mealFilter")[2]);
+    $("#mealFilter")[2].reset();
+    $.get(mealAjaxUrl, updateTable)
+    console.log('after filtering')
+}
+
+function deleteMeal(id) {
+    $.ajax({
+        url: ctx.ajaxUrl + id,
+        type: "DELETE"
     }).done(function () {
-        $("#editRow").modal("hide");
         updateTable();
-        successNoty("Saved");
+        successNoty("Deleted");
     });
 }
 
-let form;
-
 function makeEditable(datatableApi) {
     ctx.datatableApi = datatableApi;
-    form = $('#detailsForm');
     $(".delete").click(function () {
         if (confirm('Are you sure?')) {
-            deleteRow($(this).closest('tr').attr("id"));
+            deleteMeal($(this).closest('tr').attr("id"));
         }
     });
 
@@ -78,18 +92,12 @@ function makeEditable(datatableApi) {
 }
 
 function add() {
+    console.log("add meal");
     form.find(":input").val("");
-    $("#editRow").modal();
-}
+    // console.log($("mealFormModal"))
+    $('#mealFormModal').modal();
+    console.log("2")
 
-function deleteRow(id) {
-    $.ajax({
-        url: ctx.ajaxUrl + id,
-        type: "DELETE"
-    }).done(function () {
-        updateTable();
-        successNoty("Deleted");
-    });
 }
 
 function updateTable() {
